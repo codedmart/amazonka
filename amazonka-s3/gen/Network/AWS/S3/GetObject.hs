@@ -28,6 +28,7 @@ module Network.AWS.S3.GetObject
     , goIfMatch
     , goVersionId
     , goResponseContentType
+    , goResponseAccept
     , goResponseContentDisposition
     , goResponseContentLanguage
     , goSSECustomerAlgorithm
@@ -93,6 +94,7 @@ data GetObject = GetObject'
   { _goIfMatch                    :: !(Maybe Text)
   , _goVersionId                  :: !(Maybe ObjectVersionId)
   , _goResponseContentType        :: !(Maybe Text)
+  , _goResponseAccept             :: !(Maybe Text)
   , _goResponseContentDisposition :: !(Maybe Text)
   , _goResponseContentLanguage    :: !(Maybe Text)
   , _goSSECustomerAlgorithm       :: !(Maybe Text)
@@ -165,6 +167,7 @@ getObject pBucket_ pKey_ =
   { _goIfMatch = Nothing
   , _goVersionId = Nothing
   , _goResponseContentType = Nothing
+  , _goResponseAccept = Nothing
   , _goResponseContentDisposition = Nothing
   , _goResponseContentLanguage = Nothing
   , _goSSECustomerAlgorithm = Nothing
@@ -196,6 +199,10 @@ goVersionId = lens _goVersionId (\ s a -> s{_goVersionId = a});
 -- | Sets the Content-Type header of the response.
 goResponseContentType :: Lens' GetObject (Maybe Text)
 goResponseContentType = lens _goResponseContentType (\ s a -> s{_goResponseContentType = a});
+
+-- | Sets the Accept header of the response.
+goResponseAccept :: Lens' GetObject (Maybe Text)
+goResponseAccept = lens _goResponseAccept (\ s a -> s{_goResponseAccept = a});
 
 -- | Sets the Content-Disposition header of the response
 goResponseContentDisposition :: Lens' GetObject (Maybe Text)
@@ -305,6 +312,7 @@ instance AWSRequest GetObject where
                      <*> (h .#? "Content-Range")
                      <*> (h .#? "x-amz-server-side-encryption")
                      <*> (h .#? "Content-Type")
+                     <*> (h .#? "Accept")
                      <*> (pure (fromEnum s))
                      <*> (pure x))
 
@@ -337,6 +345,7 @@ instance ToQuery GetObject where
           = mconcat
               ["versionId" =: _goVersionId,
                "response-content-type" =: _goResponseContentType,
+               "response-accept" =: _goResponseAccept,
                "response-content-disposition" =:
                  _goResponseContentDisposition,
                "response-content-language" =:
