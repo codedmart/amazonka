@@ -125,6 +125,8 @@ data GetObject = GetObject'
 --
 -- * 'goResponseContentType' - Sets the Content-Type header of the response.
 --
+-- * 'goResponseAccept' - Sets the Accept header of the response.
+--
 -- * 'goResponseContentDisposition' - Sets the Content-Disposition header of the response
 --
 -- * 'goResponseContentLanguage' - Sets the Content-Language header of the response.
@@ -388,6 +390,7 @@ data GetObjectResponse = GetObjectResponse'
   , _gorsContentRange            :: !(Maybe Text)
   , _gorsServerSideEncryption    :: !(Maybe ServerSideEncryption)
   , _gorsContentType             :: !(Maybe Text)
+  , _gorsAccept                  :: !(Maybe Text)
   , _gorsResponseStatus          :: !Int
   , _gorsBody                    :: !RsBody
   } deriving (Show, Generic)
@@ -453,6 +456,8 @@ data GetObjectResponse = GetObjectResponse'
 --
 -- * 'gorsContentType' - A standard MIME type describing the format of the object data.
 --
+-- * 'gorsAccept' - A standard MIME type describing the format of the object data accepted.
+--
 -- * 'gorsResponseStatus' - -- | The response status code.
 --
 -- * 'gorsBody' - Object data.
@@ -490,6 +495,7 @@ getObjectResponse pResponseStatus_ pBody_ =
   , _gorsContentRange = Nothing
   , _gorsServerSideEncryption = Nothing
   , _gorsContentType = Nothing
+  , _gorsAccept = Nothing
   , _gorsResponseStatus = pResponseStatus_
   , _gorsBody = pBody_
   }
@@ -606,6 +612,10 @@ gorsServerSideEncryption = lens _gorsServerSideEncryption (\ s a -> s{_gorsServe
 -- | A standard MIME type describing the format of the object data.
 gorsContentType :: Lens' GetObjectResponse (Maybe Text)
 gorsContentType = lens _gorsContentType (\ s a -> s{_gorsContentType = a});
+
+-- | A standard MIME type describing the format of the object data accepted.
+gorsAccept :: Lens' GetObjectResponse (Maybe Text)
+gorsAccept = lens _gorsAccept (\ s a -> s{_gorsAccept = a});
 
 -- | -- | The response status code.
 gorsResponseStatus :: Lens' GetObjectResponse Int
