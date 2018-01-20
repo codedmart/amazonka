@@ -39,6 +39,7 @@ module Network.AWS.S3.PutObject
     , poSSEKMSKeyId
     , poGrantFullControl
     , poContentEncoding
+    , poAcceptEncoding
     , poTagging
     , poContentMD5
     , poMetadata
@@ -67,12 +68,12 @@ module Network.AWS.S3.PutObject
     , porsResponseStatus
     ) where
 
-import Network.AWS.Lens
-import Network.AWS.Prelude
-import Network.AWS.Request
-import Network.AWS.Response
-import Network.AWS.S3.Types
-import Network.AWS.S3.Types.Product
+import           Network.AWS.Lens
+import           Network.AWS.Prelude
+import           Network.AWS.Request
+import           Network.AWS.Response
+import           Network.AWS.S3.Types
+import           Network.AWS.S3.Types.Product
 
 -- | /See:/ 'putObject' smart constructor.
 data PutObject = PutObject'
@@ -90,6 +91,7 @@ data PutObject = PutObject'
   , _poSSEKMSKeyId             :: !(Maybe (Sensitive Text))
   , _poGrantFullControl        :: !(Maybe Text)
   , _poContentEncoding         :: !(Maybe Text)
+  , _poAcceptEncoding          :: !(Maybe Text)
   , _poTagging                 :: !(Maybe Text)
   , _poContentMD5              :: !(Maybe Text)
   , _poMetadata                :: !(Map Text Text)
@@ -137,6 +139,8 @@ data PutObject = PutObject'
 --
 -- * 'poContentEncoding' - Specifies what content encodings have been applied to the object and thus what decoding mechanisms must be applied to obtain the media-type referenced by the Content-Type header field.
 --
+-- * 'poAcceptEncoding' - Specifies what accept encodings have been applied to the object and thus what decoding mechanisms must be applied to obtain the media-type referenced by the Content-Type header field.
+--
 -- * 'poTagging' - The tag-set for the object. The tag-set must be encoded as URL Query parameters
 --
 -- * 'poContentMD5' - The base64-encoded 128-bit MD5 digest of the part data.
@@ -181,6 +185,7 @@ putObject pBucket_ pKey_ pBody_ =
   , _poSSEKMSKeyId = Nothing
   , _poGrantFullControl = Nothing
   , _poContentEncoding = Nothing
+  , _poAcceptEncoding = Nothing
   , _poTagging = Nothing
   , _poContentMD5 = Nothing
   , _poMetadata = mempty
@@ -251,6 +256,10 @@ poGrantFullControl = lens _poGrantFullControl (\ s a -> s{_poGrantFullControl = 
 -- | Specifies what content encodings have been applied to the object and thus what decoding mechanisms must be applied to obtain the media-type referenced by the Content-Type header field.
 poContentEncoding :: Lens' PutObject (Maybe Text)
 poContentEncoding = lens _poContentEncoding (\ s a -> s{_poContentEncoding = a});
+
+-- | Specifies what accept encodings have been applied to the object and thus what decoding mechanisms must be applied to obtain the media-type referenced by the Content-Type header field.
+poAcceptEncoding :: Lens' PutObject (Maybe Text)
+poAcceptEncoding = lens _poAcceptEncoding (\ s a -> s{_poAcceptEncoding = a});
 
 -- | The tag-set for the object. The tag-set must be encoded as URL Query parameters
 poTagging :: Lens' PutObject (Maybe Text)
@@ -346,6 +355,7 @@ instance ToHeaders PutObject where
                  _poSSEKMSKeyId,
                "x-amz-grant-full-control" =# _poGrantFullControl,
                "Content-Encoding" =# _poContentEncoding,
+               "Accept-Encoding" =# _poAcceptEncoding,
                "x-amz-tagging" =# _poTagging,
                "Content-MD5" =# _poContentMD5,
                "x-amz-meta-" =# _poMetadata,
