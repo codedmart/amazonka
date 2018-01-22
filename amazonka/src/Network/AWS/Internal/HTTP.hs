@@ -39,7 +39,6 @@ import Network.AWS.Lens            (to, view, _Just)
 import Network.AWS.Prelude
 import Network.AWS.Waiter
 import Network.HTTP.Conduit        hiding (Proxy, Request, Response)
-import Network.HTTP.Client (defaultManagerSettings, managerModifyRequest)
 
 retrier :: ( MonadCatch m
            , MonadResource m
@@ -133,8 +132,7 @@ perform Env{..} x = do
         logTrace _envLogger m  -- trace:Signing:Meta
         logDebug _envLogger rq -- debug:ClientRequest
 
-        rq_         <- liftIO $ managerModifyRequest defaultManagerSettings rq{ requestHeaders = [("Content-Length", "0")] ++ requestHeaders rq }
-        rs          <- liftResourceT (http rq_ _envManager)
+        rs          <- liftResourceT (http rq _envManager)
 
         logDebug _envLogger rs -- debug:ClientResponse
 
