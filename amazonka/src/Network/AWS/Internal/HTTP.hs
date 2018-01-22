@@ -45,12 +45,16 @@ retrier :: ( MonadCatch m
            , MonadReader r m
            , HasEnv r
            , AWSRequest a
+           , Show Env
+           , Show (Request a)
            )
         => a
         -> m (Either Error (Response a))
 retrier x = do
     e  <- view environment
     rq <- configured x
+    liftIO $ print e
+    liftIO $ print rq
     retrying (policy rq) (check e rq) (\_ -> perform e rq)
   where
     policy rq = retryStream rq <> retryService (_rqService rq)

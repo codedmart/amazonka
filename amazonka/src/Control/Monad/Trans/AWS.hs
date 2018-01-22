@@ -272,18 +272,16 @@ type AWSConstraint r m =
 -- | Send a request, returning the associated response if successful.
 --
 -- Throws 'Error'.
-send :: (AWSConstraint r m, AWSRequest a, Show a)
+send :: (AWSConstraint r m, AWSRequest a, Show Env, Show (Request a))
      => a
      -> m (Rs a)
-send a = do
-  liftIO $ print a
-  retrier a >>= fmap snd . hoistError
+send = retrier >=> fmap snd . hoistError
 
 -- | Repeatedly send a request, automatically setting markers and
 -- paginating over multiple responses while available.
 --
 -- Throws 'Error'.
-paginate :: (AWSConstraint r m, AWSPager a, Show a)
+paginate :: (AWSConstraint r m, AWSPager a, Show Env, Show (Request a))
          => a
          -> Source m (Rs a)
 paginate = go

@@ -260,12 +260,12 @@ timeout :: MonadAWS m => Seconds -> AWS a -> m a
 timeout s = liftAWS . AWST.timeout s
 
 -- | Send a request, returning the associated response if successful.
-send :: (MonadAWS m, AWSRequest a, Show a) => a -> m (Rs a)
+send :: (MonadAWS m, AWSRequest a, Show Env, Show (Request a)) => a -> m (Rs a)
 send = liftAWS . AWST.send
 
 -- | Repeatedly send a request, automatically setting markers and
 -- paginating over multiple responses while available.
-paginate :: (MonadAWS m, AWSPager a, Show a) => a -> Source m (Rs a)
+paginate :: (MonadAWS m, AWSPager a, Show Env, Show (Request a)) => a -> Source m (Rs a)
 paginate = hoist liftAWS . AWST.paginate
 
 -- | Poll the API with the supplied request until a specific 'Wait' condition
