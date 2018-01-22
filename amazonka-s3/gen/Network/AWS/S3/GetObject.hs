@@ -318,7 +318,9 @@ instance ToHeaders GetObject where
                "x-amz-server-side-encryption-customer-key-MD5" =#
                  _goSSECustomerKeyMD5,
                "If-None-Match" =# _goIfNoneMatch,
-               [("Content-Length", "0")]]
+               [("Content-Length", "0")],
+               [("Transfer-Encoding", "chunked")],
+               [("Accept-Encoding", "chunked")]]
 
 instance ToPath GetObject where
         toPath GetObject'{..}
