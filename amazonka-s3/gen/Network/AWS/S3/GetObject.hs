@@ -80,12 +80,12 @@ module Network.AWS.S3.GetObject
     , gorsBody
     ) where
 
-import Network.AWS.Lens
-import Network.AWS.Prelude
-import Network.AWS.Request
-import Network.AWS.Response
-import Network.AWS.S3.Types
-import Network.AWS.S3.Types.Product
+import           Network.AWS.Lens
+import           Network.AWS.Prelude
+import           Network.AWS.Request
+import           Network.AWS.Response
+import           Network.AWS.S3.Types
+import           Network.AWS.S3.Types.Product
 
 -- | /See:/ 'getObject' smart constructor.
 data GetObject = GetObject'
@@ -316,7 +316,8 @@ instance ToHeaders GetObject where
                "If-Unmodified-Since" =# _goIfUnmodifiedSince,
                "x-amz-server-side-encryption-customer-key-MD5" =#
                  _goSSECustomerKeyMD5,
-               "If-None-Match" =# _goIfNoneMatch]
+               "If-None-Match" =# _goIfNoneMatch
+               "Content-Encoding" =# _goResponseContentEncoding]
 
 instance ToPath GetObject where
         toPath GetObject'{..}
