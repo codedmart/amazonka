@@ -36,6 +36,7 @@ module Network.AWS.S3.GetObject
     , goRequestPayer
     , goResponseContentEncoding
     , goResponseAcceptEncoding
+    , goResponseTransferEncoding
     , goIfModifiedSince
     , goPartNumber
     , goRange
@@ -102,6 +103,7 @@ data GetObject = GetObject'
   , _goRequestPayer               :: !(Maybe RequestPayer)
   , _goResponseContentEncoding    :: !(Maybe Text)
   , _goResponseAcceptEncoding     :: !(Maybe Text)
+  , _goResponseTransferEncoding   :: !(Maybe Text)
   , _goIfModifiedSince            :: !(Maybe RFC822)
   , _goPartNumber                 :: !(Maybe Int)
   , _goRange                      :: !(Maybe Text)
@@ -141,6 +143,8 @@ data GetObject = GetObject'
 --
 -- * 'goResponseAcceptEncoding' - Sets the Accept-Encoding header of the response.
 --
+-- * 'goResponseTransferEncoding' - Sets the Transfer-Encoding header of the response.
+--
 -- * 'goIfModifiedSince' - Return the object only if it has been modified since the specified time, otherwise return a 304 (not modified).
 --
 -- * 'goPartNumber' - Part number of the object being read. This is a positive integer between 1 and 10,000. Effectively performs a 'ranged' GET request for the part specified. Useful for downloading just a part of an object.
@@ -177,6 +181,7 @@ getObject pBucket_ pKey_ =
   , _goRequestPayer = Nothing
   , _goResponseContentEncoding = Nothing
   , _goResponseAcceptEncoding = Nothing
+  , _goResponseTransferEncoding = Nothing
   , _goIfModifiedSince = Nothing
   , _goPartNumber = Nothing
   , _goRange = Nothing
@@ -233,6 +238,10 @@ goResponseContentEncoding = lens _goResponseContentEncoding (\ s a -> s{_goRespo
 -- | Sets the Accept-Encoding header of the response.
 goResponseAcceptEncoding :: Lens' GetObject (Maybe Text)
 goResponseAcceptEncoding = lens _goResponseAcceptEncoding (\ s a -> s{_goResponseAcceptEncoding = a});
+
+-- | Sets the Transfer-Encoding header of the response.
+goResponseTransferEncoding :: Lens' GetObject (Maybe Text)
+goResponseTransferEncoding = lens _goResponseTransferEncoding (\ s a -> s{_goResponseTransferEncoding = a});
 
 -- | Return the object only if it has been modified since the specified time, otherwise return a 304 (not modified).
 goIfModifiedSince :: Lens' GetObject (Maybe UTCTime)
@@ -305,6 +314,7 @@ instance AWSRequest GetObject where
                      (h .#? "x-amz-server-side-encryption-aws-kms-key-id")
                      <*> (h .#? "Content-Encoding")
                      <*> (h .#? "Accept-Encoding")
+                     <*> (h .#? "Transfer-Encoding")
                      <*> (parseHeadersMap "x-amz-meta-" h)
                      <*> (h .#? "x-amz-replication-status")
                      <*> (h .#? "Cache-Control")
@@ -356,6 +366,8 @@ instance ToQuery GetObject where
                  _goResponseContentEncoding,
                "response-accept-encoding" =:
                  _goResponseAcceptEncoding,
+               "response-transfer-encoding" =:
+                 _goResponseTransferEncoding,
                "partNumber" =: _goPartNumber,
                "response-cache-control" =: _goResponseCacheControl,
                "response-expires" =: _goResponseExpires]
@@ -381,6 +393,7 @@ data GetObjectResponse = GetObjectResponse'
   , _gorsSSEKMSKeyId             :: !(Maybe (Sensitive Text))
   , _gorsContentEncoding         :: !(Maybe Text)
   , _gorsAcceptEncoding          :: !(Maybe Text)
+  , _gorsTransferEncoding        :: !(Maybe Text)
   , _gorsMetadata                :: !(Map Text Text)
   , _gorsReplicationStatus       :: !(Maybe ReplicationStatus)
   , _gorsCacheControl            :: !(Maybe Text)
@@ -438,6 +451,8 @@ data GetObjectResponse = GetObjectResponse'
 --
 -- * 'gorsAcceptEncoding' - Specifies what accept encodings have been applied to the object and thus what decoding mechanisms must be applied to obtain the media-type referenced by the Content-Type header field.
 --
+-- * 'gorsTransferEncoding' - Specifies what transfer encodings have been applied to the object and thus what decoding mechanisms must be applied to obtain the media-type referenced by the Content-Type header field.
+--
 -- * 'gorsMetadata' - A map of metadata to store with the object in S3.
 --
 -- * 'gorsReplicationStatus' - Undocumented member.
@@ -486,6 +501,7 @@ getObjectResponse pResponseStatus_ pBody_ =
   , _gorsSSEKMSKeyId = Nothing
   , _gorsContentEncoding = Nothing
   , _gorsAcceptEncoding = Nothing
+  , _gorsTransferEncoding = Nothing
   , _gorsMetadata = mempty
   , _gorsReplicationStatus = Nothing
   , _gorsCacheControl = Nothing
@@ -576,6 +592,10 @@ gorsContentEncoding = lens _gorsContentEncoding (\ s a -> s{_gorsContentEncoding
 -- | Specifies what accept encodings have been applied to the object and thus what decoding mechanisms must be applied to obtain the media-type referenced by the Content-Type header field.
 gorsAcceptEncoding :: Lens' GetObjectResponse (Maybe Text)
 gorsAcceptEncoding = lens _gorsAcceptEncoding (\ s a -> s{_gorsAcceptEncoding = a});
+
+-- | Specifies what transfer encodings have been applied to the object and thus what decoding mechanisms must be applied to obtain the media-type referenced by the Content-Type header field.
+gorsTransferEncoding :: Lens' GetObjectResponse (Maybe Text)
+gorsTransferEncoding = lens _gorsTransferEncoding (\ s a -> s{_gorsTransferEncoding = a});
 
 -- | A map of metadata to store with the object in S3.
 gorsMetadata :: Lens' GetObjectResponse (HashMap Text Text)
