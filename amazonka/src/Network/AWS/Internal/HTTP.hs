@@ -45,16 +45,12 @@ retrier :: ( MonadCatch m
            , MonadReader r m
            , HasEnv r
            , AWSRequest a
-           , Show Env
-           , Show (Request a)
            )
         => a
         -> m (Either Error (Response a))
 retrier x = do
     e  <- view environment
     rq <- configured x
-    liftIO $ print e
-    liftIO $ print rq
     retrying (policy rq) (check e rq) (\_ -> perform e rq)
   where
     policy rq = retryStream rq <> retryService (_rqService rq)
@@ -124,7 +120,8 @@ perform :: (MonadCatch m, MonadResource m, AWSRequest a)
         => Env
         -> Request a
         -> m (Either Error (Response a))
-perform Env{..} x = catches go handlers
+perform Env{..} x = do
+  catches go handlers
   where
     go = do
         t           <- liftIO getCurrentTime
@@ -138,6 +135,8 @@ perform Env{..} x = catches go handlers
         rs          <- liftResourceT (http rq _envManager)
 
         logDebug _envLogger rs -- debug:ClientResponse
+
+        liftIO $ print rq
 
         Right <$> response _envLogger (_rqService x) (p x) rs
 
