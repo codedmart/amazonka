@@ -319,8 +319,7 @@ instance ToHeaders GetObject where
                  _goSSECustomerKeyMD5,
                "If-None-Match" =# _goIfNoneMatch,
                [("Content-Length", "0")],
-               [("Transfer-Encoding", "chunked")],
-               [("Accept-Encoding", "chunked")]]
+               [("Accept-Encoding", "*")]]
 
 instance ToPath GetObject where
         toPath GetObject'{..}
