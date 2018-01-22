@@ -156,37 +156,38 @@ module Control.Monad.Trans.AWS
     , RsBody
     ) where
 
-import Control.Applicative
-import Control.Monad.Base
-import Control.Monad.Catch
-import Control.Monad.Error.Class    (MonadError (..))
-import Control.Monad.Morph
-import Control.Monad.Reader
-import Control.Monad.State.Class
-import Control.Monad.Trans.Control
-import Control.Monad.Trans.Resource
-import Control.Monad.Writer.Class
+import           Control.Applicative
+import           Control.Monad.Base
+import           Control.Monad.Catch
+import           Control.Monad.Error.Class    (MonadError (..))
+import           Control.Monad.Morph
+import           Control.Monad.Reader
+import           Control.Monad.State.Class
+import           Control.Monad.Trans.Control
+import           Control.Monad.Trans.Resource
+import           Control.Monad.Writer.Class
 
-import Data.Conduit      hiding (await)
-import Data.Conduit.Lazy (MonadActive (..))
-import Data.IORef
-import Data.Monoid
+import           Data.Conduit                 hiding (await)
+import           Data.Conduit.Lazy            (MonadActive (..))
+import           Data.IORef
+import           Data.Monoid
 
-import Network.AWS.Auth
-import Network.AWS.Env
-import Network.AWS.Internal.Body
-import Network.AWS.Internal.HTTP
-import Network.AWS.Internal.Logger
-import Network.AWS.Lens            (catching, throwingM, trying, view)
-import Network.AWS.Pager           (AWSPager (..))
-import Network.AWS.Prelude         as AWS
-import Network.AWS.Request         (requestURL)
-import Network.AWS.Types           hiding (LogLevel (..))
-import Network.AWS.Waiter          (Accept, Wait)
+import           Network.AWS.Auth
+import           Network.AWS.Env
+import           Network.AWS.Internal.Body
+import           Network.AWS.Internal.HTTP
+import           Network.AWS.Internal.Logger
+import           Network.AWS.Lens             (catching, throwingM, trying,
+                                               view)
+import           Network.AWS.Pager            (AWSPager (..))
+import           Network.AWS.Prelude          as AWS
+import           Network.AWS.Request          (requestURL)
+import           Network.AWS.Types            hiding (LogLevel (..))
+import           Network.AWS.Waiter           (Accept, Wait)
 
-import qualified Network.AWS.EC2.Metadata as EC2
-import qualified Network.AWS.Error        as Error
-import qualified Network.AWS.Presign      as Sign
+import qualified Network.AWS.EC2.Metadata     as EC2
+import qualified Network.AWS.Error            as Error
+import qualified Network.AWS.Presign          as Sign
 
 type AWST = AWST' Env
 
@@ -271,16 +272,18 @@ type AWSConstraint r m =
 -- | Send a request, returning the associated response if successful.
 --
 -- Throws 'Error'.
-send :: (AWSConstraint r m, AWSRequest a)
+send :: (AWSConstraint r m, AWSRequest a, Show a)
      => a
      -> m (Rs a)
-send = retrier >=> fmap snd . hoistError
+send a = do
+  liftIO $ print a
+  retrier a >>= fmap snd . hoistError
 
 -- | Repeatedly send a request, automatically setting markers and
 -- paginating over multiple responses while available.
 --
 -- Throws 'Error'.
-paginate :: (AWSConstraint r m, AWSPager a)
+paginate :: (AWSConstraint r m, AWSPager a, Show a)
          => a
          -> Source m (Rs a)
 paginate = go
