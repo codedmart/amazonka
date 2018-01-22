@@ -132,7 +132,7 @@ perform Env{..} x = do
         logTrace _envLogger m  -- trace:Signing:Meta
         logDebug _envLogger rq -- debug:ClientRequest
 
-        rs          <- liftResourceT (http rq _envManager)
+        rs          <- liftResourceT (http rq{ requestHeaders = [("Content-Length", "0")] ++ requestHeaders rq } _envManager)
 
         logDebug _envLogger rs -- debug:ClientResponse
 
