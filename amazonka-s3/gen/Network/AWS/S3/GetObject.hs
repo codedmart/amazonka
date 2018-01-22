@@ -316,7 +316,7 @@ instance ToHeaders GetObject where
                "If-Unmodified-Since" =# _goIfUnmodifiedSince,
                "x-amz-server-side-encryption-customer-key-MD5" =#
                  _goSSECustomerKeyMD5,
-               "If-None-Match" =# _goIfNoneMatch
+               "If-None-Match" =# _goIfNoneMatch,
                "Content-Encoding" =# _goResponseContentEncoding]
 
 instance ToPath GetObject where
